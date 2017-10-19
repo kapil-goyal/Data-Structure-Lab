@@ -1,5 +1,3 @@
-# Data-Structure-Lab
-This repository contains various questions asked in DS Lab and their solutions.
 ## Questions asked during lab
 ### 1. Write a function that reverse a single linked list. Create a link list first using a function. Write a function that prints a linked list.
 ```
