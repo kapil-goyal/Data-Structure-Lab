@@ -2,23 +2,12 @@
 #include <cstdio>
 using namespace std;
 
-/*
-	caution: Printing of no. of output sequences is done at last. (I have asked instructor about this) Because for large sequences storing may result in overflow
-
-	algo:
-
-	1.) A recursive function is used for printing permutations based on tree structure.
-*/
-
-
-// struct node for a tree node
 struct node
 {
 	int key,color;
 	node* left, *right;
 };
 
-//createnode function for tree node
 node* createnode(int key)
 {
 	node* temp = new node;
@@ -29,7 +18,6 @@ node* createnode(int key)
 	return temp;
 }
 
-//This function will construct BST from a given pre order
 node* build_tree(int *pre, int start, int end)
 {
 	if(start > end)
@@ -47,7 +35,6 @@ node* build_tree(int *pre, int start, int end)
 	return root;
 }
 
-//Printing of inorder just for debugging
 void print_in(node* root)
 {
 	if(root == NULL)
@@ -57,9 +44,6 @@ void print_in(node* root)
 	cout << root->key << " ";
 	print_in(root->right);
 }
-
-// A class and struct for linked list functions
-////////////////////////////////////////////////////
 struct list_node
 {
 	node* ptr;
@@ -125,13 +109,16 @@ public:
 		tail = temp2;
 	}
 };
-void print(my_list lis) {
+void print(my_list lis, string & res) {
 	list_node* temp = lis.start();
+	char arry[100] = "";
 	while(temp != NULL) {
 		printf("%d ",temp->ptr->key);
+		res += arry;
 		temp = temp->next;
 	}
 	printf("\n");
+	res += arry;
 }
 
 list_node *createlistnode(node* point) {
@@ -140,10 +127,7 @@ list_node *createlistnode(node* point) {
 	temp->next = NULL; 
 	return temp;
 }
-////////////////////////////////////////////////////
 
-
-//A utility function which is used in printing of permutations
 void givelist(node* root, my_list& treelist)
 {
 	if(root == NULL ) {
@@ -158,13 +142,8 @@ void givelist(node* root, my_list& treelist)
 		givelist(root->right,treelist);
 	}
 }
-
-//A recursive function which will print permutations
-void print_permu(node* x, node* root, my_list list_x, int& count)
+void print_permu(node* x, node* root, my_list list_x, int& count,string& result)
 {
-	if(x==NULL)
-		return;
-
 	givelist(x,list_x);
 	x->color = 1;
 
@@ -172,24 +151,24 @@ void print_permu(node* x, node* root, my_list list_x, int& count)
 	givelist(root,list3);
 	list_node* temp = list3.start();
 	if(temp == NULL) {
-		print(list_x);
+		print(list_x,result);
 		count++;
 	}
 	while(temp != NULL) {
-		print_permu(temp->ptr,root,list_x, count);
+		print_permu(temp->ptr,root,list_x, count, result);
 		temp = temp->next;
 	}
 	x->color = 0;
 	list_x.del_end();
 }
 
-
 int main()
 {
 	int N,d;
-	cout << "Input: \n";
-	cin >> N;						//Input taken
+	cin >> N;
+
 	int *preorder = new int [N];
+
 	for (int i = 0; i < N; ++i)
 	{
 		cin >> d;
@@ -197,12 +176,14 @@ int main()
 	}
 
 	node *root = NULL;
-	root = build_tree(preorder,	0,N-1);	//making of tree
-	
+	root = build_tree(preorder,	0,N-1);
+
+	print_in(root);
+	cout << endl << endl;
 	int count=0;
 	my_list list_x;
-
-	cout << "Output:"  << endl;
-	print_permu(root,root,list_x,count);	//printing of permutations will occur
-	cout << "No. of Possible Sequences: "  << count << endl;	//printing of no. of output sequences
+	string res = "";
+	print_permu(root,root,list_x,count,res);
+	cout << count << endl;
+	cout << res;
 }
